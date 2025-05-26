@@ -1,0 +1,486 @@
+			
+			
+			
+			
+			
+			//static LPARAM lastlParam = lParam;
+			//RECT rect = { LOWORD(lastlParam) - as, HIWORD(lastlParam) - as, LOWORD(lastlParam) + as, HIWORD(lastlParam) + as };
+			//lastlParam = lParam;
+			//InvalidateRect(hWnd, &rect, true);
+			//SendMessage(hWnd, WM_PAINT, wParam, lParam);
+			
+
+			//HDC hdc = GetDC(hWnd);
+			//MouseSx(hdc, lParam, hbrushWL, cxClient, cyClient, smClient);
+			//ReleaseDC(hWnd, hdc);
+			
+
+			
+
+			//if (rect != lastRect && rect != RECT{ 0, 0, 0, 0 })
+			//{
+			//	InvalidateRect(hWnd, &lastRect, true);
+			//	lastRect = rect;
+			//}
+			//else
+			//	InvalidateRect(hWnd, &lastRect, false);
+
+
+
+
+
+
+			case WM_PAINT:
+	{
+		//LPRECT lpRect;
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hWnd, &ps);
+		HDC hdcmem = CreateCompatibleDC(hdc);
+		HBITMAP hBitmap = CreateCompatibleBitmap(hdc, cxClient, cyClient);
+		SelectObject(hdcmem, hBitmap);
+
+
+		RECT temp = { 0,0,cxClient,cyClient };
+		HBRUSH tempBrush = CreateSolidBrush(RGB(255, 255, 255));
+		FillRect(hdcmem, &temp, tempBrush);
+		DeleteObject(tempBrush);
+
+		int sbm = SetBkMode(hdcmem, TRANSPARENT);
+
+		HGDIOBJ hpen = SelectObject(hdcmem, hpen2);
+		HGDIOBJ hbrush = SelectObject(hdcmem, hbrush2);
+		ColorMap(hdcmem, cxClient, cyClient, smClient - xy);
+		SelectObject(hdcmem, hbrush);
+		SelectObject(hdcmem, hpen);
+
+		hpen = SelectObject(hdcmem, hpen1);
+		hbrush = SelectObject(hdcmem, hbrush1);
+		Map(hdcmem, cxClient, cyClient, smClient - xy);
+		SelectObject(hdcmem, hbrush);
+		SelectObject(hdcmem, hpen);//GetStockObject(BLACK_PEN)
+
+		//POINT point;
+		//GetCursorPos(&point);
+		//ScreenToClient(hWnd, &point);
+		hpen = SelectObject(hdcmem, hpen2);
+		hbrush = SelectObject(hdcmem, hbrushBH);
+		//Ellipse(hdc, mx + cmx - as, my + cmy - as, mx + cmx + as, my + cmy + as);
+		Ellipse(hdcmem, rect.left, rect.top, rect.right, rect.bottom);
+		SelectObject(hdcmem, hbrush);
+		SelectObject(hdcmem, hpen);
+
+
+		SetBkMode(hdcmem, sbm);
+
+		BitBlt(hdc, 0, 0, cxClient, cyClient, hdcmem, 0, 0, SRCCOPY);
+		DeleteDC(hdcmem);
+
+		EndPaint(hWnd, &ps);
+	}
+	break;
+
+
+	//POINT point;
+					//GetCursorPos(&point);
+					//ScreenToClient(hWnd, &point);
+
+					//Ellipse(hdcmem, mx + cmx - as, my + cmy - as, mx + cmx + as, my + cmy + as);
+
+
+
+
+					//LOWORD(lParam);//mouse x
+	//HIWORD(lParam);//mouse y
+	//hbrushBH = CreateSolidBrush(RGB(51, 51, 51));
+	//hbrushWH = CreateSolidBrush(RGB(240, 240, 240));
+	//hbrushBL = CreateSolidBrush(RGB(71, 71, 71));
+	//hbrushWL = CreateSolidBrush(RGB(220, 220, 220));
+
+
+		//4.连接服务器
+	//深度解析一下SOCKADDR_IN（结构体）
+
+	//struct sockaddr_in 
+	//{
+	//	unsigned short sin_family;
+	//	unsigned short sin_port;
+	//	IN_ADDR sin_addr;
+	//	CHAR sin_zero[8];
+	//};
+
+
+	////深度解析IN_ADDR
+	//typedef struct in_addr
+	//{
+	//	union 
+	//	{
+	//		struct { UCHAR s_b1, s_b2, s_b3, s_b4; } S_un_b;
+	//		struct { USHORT s_w1, s_w2; } S_un_w;
+	//		unsigned long S_addr;
+	//	} S_un;
+	//} IN_ADDR;
+
+
+		//printf("恭喜你.连接服务器成功.\n");
+
+
+
+			//3.创建套接字
+	//IPv4, IPv6
+	//TCP/IP协议：（TCP, UDP） TCP协议
+	//TCP : （传输控制协议），特点：必须事先建立连接，稳定性非常高，一般不会丢包，可靠性高		SOCK_STREAM
+	//协议：就相当于互相约定好，互相遵守的
+
+	//网络编程，TCP, IP ，UDP
+
+	//网络编程
+//套接字， 套接字（socket） : IP地址信息， 端口信息
+//winsock.h
+//winsock2.h	2.0版本 2.2
+
+//_beginthread(Recv_Thread, 0, NULL);
+//while (true)
+//{
+	
+//}
+
+//void Recv_Thread(LPVOID)
+//{
+//	while (1)
+//	{
+		
+//	}
+//}
+
+
+
+
+
+//批量读取（正向）
+inline bool See_All(NODE& node, bool(&fSee_P)(int&, int&, int&))
+{
+	if (node.hpQueue == NULL)
+		return false;
+
+	QUEUE* seeQueue = node.hpQueue;
+
+	while (seeQueue != nullptr)
+	{
+		if (fSee_P(seeQueue->list_x, seeQueue->list_y, seeQueue->list_n))
+			seeQueue = seeQueue->nQueue;
+		else
+			break;
+	}
+
+	return true;
+}
+
+//批量添加（正向）
+inline bool Add_All(NODE& node, bool(&fAdd_P)(int&, int&, int&))
+{
+	if (node.hpQueue != NULL)
+		return false;
+
+	int list_x(0), list_y(0), list_n(0);
+
+	while (fAdd_P(list_x, list_y, list_n))
+	{
+		if (Add_CpQueue(node, list_x, list_y, list_n) == false)
+			return false;
+	}
+
+	return true;
+}
+
+
+
+
+
+
+			/*
+			if (SendLineMessage(socketClient, flags) < 0)
+			{
+				Sleep(15000);
+				if (SendLineMessage(socketClient, flags) < 0)
+				{
+					MessageBox(nullptr, TEXT("已断开连接!"), TEXT("五子棋"), MB_ICONINFORMATION);
+					_endthreadex(threadcodeS);
+					closesocket(socketClient);
+					LINE = false;
+					_endthreadex(threadcodeR);
+				}
+				Sleep(1000);
+			}
+			*/
+
+
+			/*
+			if (RecvLineMessage(socketClient, flags) < 0)
+			{
+				Sleep(15000);
+				if (RecvLineMessage(socketClient, flags) < 0)
+				{
+					MessageBox(nullptr, TEXT("已断开连接!"), TEXT("五子棋"), MB_ICONINFORMATION);
+					_endthreadex(threadcodeR);
+					closesocket(socketClient);
+					LINE = false;
+					_endthreadex(threadcodeS);
+				}
+			}
+			Sleep(1000);
+			*/
+
+
+			
+int SendLineMessage(const SOCKET& sockClient)//连接至服务器后的定时消息
+{
+	int sedt = 0;
+
+	{
+		char msglen[sizeof(int)];//准备数组
+		int len = sizeof(LINETO);//求出即将发送消息的长度
+		memcpy(msglen, &len, sizeof(int));//将该字段拷贝入字符串
+		sedt += send(sockClient, msglen, sizeof(int), MSG_WAITALL);//先向服务器发送一条即将发送消息的长度
+
+		if (sedt != sizeof(int))
+			return -2;
+	}
+	
+	{
+		char msg[sizeof(LINETO)];//准备数组
+		LINETO lineto = { true };//准备结构体
+		memcpy(msg, &lineto, sizeof(LINETO));//将该字段拷贝入字符串
+		sedt += send(sockClient, msg, sizeof(LINETO), MSG_WAITALL);//然后向服务器发送该结构
+
+		if (sedt != sizeof(int) + sizeof(LINETO))
+			return -1;
+	}
+	
+	return sedt;
+}
+
+int RecvLineMessage(const SOCKET& sockClient)
+{
+	int redt = 0;
+
+	{
+		char msglen[sizeof(int)];//准备数组
+		int len;//准备int字段
+		redt += recv(sockClient, msglen, sizeof(int), MSG_WAITALL);//接受即将收到的消息长度
+		memcpy(&len, msglen, sizeof(int));//将接收到的消息拷贝入int字段
+
+		if (len != sizeof(LINETO))
+			return -2;
+	}
+	
+	{
+		char msg[sizeof(LINETO)];//准备数组
+		LINETO lineto;//准备lineto结构体
+		redt += recv(sockClient, msg, sizeof(LINETO), MSG_WAITALL);//接受消息
+		memcpy(&lineto, msg, sizeof(LINETO));//将接收到的消息拷贝入结构体字段
+
+		if (lineto.lineto == false)
+			return -1;
+	}
+	
+	return redt;
+}
+
+int CloseLineMessage(const SOCKET& sockClient)
+{
+	int sedt = 0;
+
+	{
+		char msglen[sizeof(int)];//准备数组
+		int len = sizeof(LINETO);//求出即将发送消息的长度
+		memcpy(msglen, &len, sizeof(int));//将该字段拷贝入字符串
+		sedt += send(sockClient, msglen, sizeof(int), MSG_WAITALL);//先向服务器发送一条即将发送消息的长度
+
+		if (sedt != sizeof(int))
+			return -2;
+	}
+
+	{
+		char msg[sizeof(LINETO)];//准备数组
+		LINETO lineto = { false };//准备结构体
+		memcpy(msg, &lineto, sizeof(LINETO));//将该字段拷贝入字符串
+		sedt += send(sockClient, msg, sizeof(LINETO), MSG_WAITALL);//然后向服务器发送该结构
+
+		if (sedt != sizeof(int) + sizeof(LINETO))
+			return -1;
+	}
+
+	return sedt;
+}
+
+
+
+
+
+
+
+						/*
+						HDC hdcmen = CreateCompatibleDC(hdc);
+						HBITMAP hBitmap = CreateCompatibleBitmap(hdc, 50, 50);
+
+						SelectObject(hdcmen, hBitmap);
+						Ellipse(hdcmen, 0, 0, 50, 50);
+						//AlphaBlend(hdcmem, rect.left, rect.top, rect.right, rect.bottom, hdcmen, 0, 0, abs(rect.right - rect.left), abs(rect.bottom - rect.top), { AC_SRC_OVER,0,200,AC_SRC_ALPHA });
+						AlphaBlend(hdc, 0, 0, 50, 50, hdcmen, 0, 0, 50, 50, { AC_SRC_OVER,0,255,AC_SRC_ALPHA });
+
+						DeleteDC(hdcmen);
+						DeleteObject(hBitmap);
+						*/
+
+
+
+						{
+							HDC hdcmen = CreateCompatibleDC(hdc);
+							HBITMAP hBitmap = CreateCompatibleBitmap(hdc, as * 2, as * 2);
+							SelectObject(hdcmen, hBitmap);
+
+							RECT rec = { 0,0,as * 2,as * 2 };
+							FillRect(hdcmen, &rec, SkBrush);
+							Ellipse(hdcmem, 0, 0, as * 2, as * 2);
+							AlphaBlend(hdcmem, rect.left, rect.top, rect.right, rect.bottom, hdcmen, 0, 0, as * 2, as * 2, { 0,0,200,0 });
+
+							DeleteDC(hdcmen);
+							DeleteObject(hBitmap);
+						}
+
+
+
+
+						{
+						HDC hdcmen = CreateCompatibleDC(hdc);
+						HBITMAP hBitmap = CreateCompatibleBitmap(hdc, as * 2, as * 2);
+						SelectObject(hdcmen, hBitmap);
+
+						RECT rec = { 0,0,as * 2,as * 2 };
+						FillRect(hdcmen, &rec, SkBrush);
+						Ellipse(hdc, 0, 0, as * 2, as * 2);
+						AlphaBlend(hdc, lastRect.left, lastRect.top, lastRect.right, lastRect.bottom, hdcmen, 0, 0, as * 2, as * 2, { 0,0,200,0 });
+
+						DeleteDC(hdcmen);
+						DeleteObject(hBitmap);
+					}
+
+
+
+													//if (GetCursor() != HC_ARROW)
+									//SetCursor(HC_ARROW);
+
+									//else
+							//{
+								//if (GetCursor() != HC_NO)
+									//SetCursor(HC_NO);
+							//}
+
+
+
+
+					GetSubMenu();
+					GetMenuItemCount();
+					CheckMenuItem();
+					EnableMenuItem();
+					GetMenu();
+					GetMenuState();MF_GRAYED
+					GetMenuString();
+					DrawMenuBar();
+					DestroyMenu();
+
+
+
+
+
+
+
+
+
+
+					if (!LINE)
+					else
+					MessageBox(hWnd, TEXT("已经连接!"), szAppName, MB_ICONERROR);
+
+
+
+					if (LINE)
+					else
+					MessageBox(nullptr, TEXT("还未建立连接!"), szAppName, MB_ICONERROR);
+
+
+
+
+
+
+
+
+
+				OutputDebugStringA("HELLOWORLD!\r\n");
+				char dbgprint[4];
+				sprintf(dbgprint, "%d\r\n", chess[pointM.y][pointM.x].have_chess);
+				OutputDebugStringA(dbgprint);
+
+
+			/*
+			//static POINT point = { 0,0 }, lastPoint = point;//坐标结构体
+
+			if (point == lastPoint || point == POINT{ -1, -1 } )
+			{
+				if (lastPoint != POINT{ -1, -1 } && pointM != POINT{ -1,-1 } && pointL != POINT{ -1,-1 })
+				{
+					HDC hdc = GetDC(hWnd);
+					HGDIOBJ hpen = SelectObject(hdc, hpenNp);
+
+					//棋子
+					{
+						HGDIOBJ hbrush = SelectObject(hdc, pieceM);
+
+						if (!chess[pointM.y][pointM.x].have_chess)
+						{
+							Ellipse(hdc, lastPoint.x - as, lastPoint.y - as, lastPoint.x + as, lastPoint.y + as);//如果此位置已有棋子则不画
+						}
+
+						SelectObject(hdc, hbrush);
+						
+					}
+
+					//最新标记
+					{
+						HGDIOBJ hbrush = SelectObject(hdc, hbrushLAT);
+
+						Ellipse(hdc, pointL.x - as / 4, pointL.y - as / 4, pointL.x + as / 4, pointL.y + as / 4);
+
+						SelectObject(hdc, hbrush);
+					}
+
+					SelectObject(hdc, hpen);
+					ReleaseDC(hWnd, hdc);
+				}
+					
+			}
+			else*/
+			{
+				//RECT lastRect = { lastPoint.x - as, lastPoint.y - as, lastPoint.x + as, lastPoint.y + as };
+				//InvalidateRect(hWnd, &lastRect, false);
+				InvalidateRect(hWnd, NULL, false);
+				lastPoint = point;
+			}
+
+#ifdef DEBUG
+#include <debugapi.h>
+#endif
+
+//#pragma comment(lib, "Msimg32.lib")
+//#pragma comment(lib, "coredll.lib")
+
+//FindWindow()通过窗口名获取窗口句柄
+
+
+POINT pointM = XYtoPO(point, cxClient, cyClient, smClient);
+			POINT pointL = POtoXY({ lastchess.x,lastchess.y }, cxClient, cyClient, smClient);
+
+			if (pointM != POINT{ -1,-1 })//point != POINT{ -1,-1 } && 
+			{
+				
+			}
